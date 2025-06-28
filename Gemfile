@@ -50,6 +50,9 @@ group :development, :test do
 
   # https://github.com/thoughtbot/factory_bot_rails
   gem "factory_bot_rails"
+
+  # https://github.com/bblimke/webmock
+  gem "webmock"
 end
 
 group :development do
