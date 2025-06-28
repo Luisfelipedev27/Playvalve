@@ -15,6 +15,10 @@ A Ruby on Rails 7 API-only application for fraud detection and user security val
 - Redis 6+
 - VPNAPI.io API key (get from https://vpnapi.io/)
 
+## Flowchart
+
+![Screenshot 2025-06-28 at 02 37 57](https://github.com/user-attachments/assets/0aa3c910-08b3-4927-b01a-9cd45f46d760)
+
 # Setup Instructions
 
 ## Environment Variables
@@ -77,5 +81,8 @@ curl -X POST http://localhost:3000/v1/user/check_status \
   - While I considered using Jbuilder, the current simple API responses ({"ban_status": "banned"}) made direct JSON rendering more appropriate. For future endpoints with complex nested data structures, Jbuilder would provide better organization and maintainability of JSON templates.
 - VCR for External API Testing
   - I would prefer implementing VCR for testing external API interactions instead of relying heavily on mocks, as I've worked with it before. -> [https://github.com/vcr/vcr]
+## Final Thoughts
 
+I have worked on large projects with millions of users, so I know the challenges very well. I know how to deal with problematic, slow and non-performing endpoints. I know how to work with Redis and Sidekiq, dealing with Jobs running in the background. I also know how to deal very well with microservices, having worked on multiple repositories that often complement each other through http requests. My main skill is not just writing code in Ruby on Rails, but solving real problems.
 
+I thank you in advance for the opportunity.
