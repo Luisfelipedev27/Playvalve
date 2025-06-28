@@ -8,6 +8,7 @@ class VpnApiClientService < ApplicationService
     self.ip = ip
     self.cache_key = "vpnapi:#{ip}"
     self.response = nil
+    self.api_key = ENV.fetch('VPNAPI_KEY') { raise 'VPNAPI_KEY environment variable is required' }
   end
 
   def call
@@ -16,7 +17,7 @@ class VpnApiClientService < ApplicationService
     self
   end
 
-  attr_accessor :ip, :cache_key, :response
+  attr_accessor :ip, :cache_key, :response, :api_key
 
   attr_writer :result
 
@@ -41,18 +42,17 @@ class VpnApiClientService < ApplicationService
       conn.adapter Faraday.default_adapter
     end
 
-    self.response = connection.get("#{ENDPOINT}#{ip}")
+    self.response = connection.get("#{ENDPOINT}#{ip}?key=#{api_key}")
 
     if response.success?
       true
     else
       set_fallback_result
+
       false
     end
 
-  rescue Faraday::TimeoutError, StandardError  => e
-    Rails.logger.error "Error calling VPNAPI for IP #{ip}: #{e.message}"
-
+  rescue Faraday::TimeoutError, StandardError => e
     set_fallback_result
 
     false
@@ -67,8 +67,6 @@ class VpnApiClientService < ApplicationService
 
     true
   rescue StandardError => e
-    Rails.logger.error "Error parsing VPNAPI response for #{ip}: #{e.message}"
-
     set_fallback_result
 
     false
@@ -77,16 +75,22 @@ class VpnApiClientService < ApplicationService
   def parse_response_body
     data = response.body.is_a?(Hash) ? response.body : JSON.parse(response.body)
 
+    security = data['security'] || {}
+
     {
-      proxy: data.dig('security', 'proxy') || false,
-      vpn: data.dig('security', 'vpn') || data.dig('security', 'tor') || false
+      proxy: security['proxy'] || false,
+      vpn: security['vpn'] || false,
+      tor: security['tor'] || false,
+      relay: security['relay'] || false
     }
   end
 
   def set_fallback_result
     self.result = {
       proxy: false,
-      vpn: false
+      vpn: false,
+      tor: false,
+      relay: false
     }
   end
 end
