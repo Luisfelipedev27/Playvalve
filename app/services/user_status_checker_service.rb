@@ -25,6 +25,12 @@ class UserStatusCheckerService < ApplicationService
   private
 
   def find_or_create_user
+    if idfa.blank? || ip.blank?
+
+      self.error_message = "IDFA and IP are required"
+      return false
+    end
+
     self.user = User.find_or_create_by(idfa: idfa) { |u| u.ban_status = 'not_banned' }
 
     return true if user.persisted?
