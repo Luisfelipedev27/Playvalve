@@ -1,10 +1,9 @@
 module V1
   class UserController < ApplicationController
     def check_status
-      ip = request.remote_ip
       country = request.headers['CF-IPCountry']
 
-      service = UserStatusCheckerService.call(user_params: user_params, ip: ip, country: country)
+      service = UserStatusCheckerService.call(user_params: user_params, ip: get_client_ip, country: country)
 
       if service.success?
         render json: { ban_status: service.final_status_result }, status: :ok
@@ -17,6 +16,16 @@ module V1
 
     def user_params
       params.permit(:idfa, :rooted_device)
+    end
+
+    def get_client_ip
+      remote_ip = request.remote_ip
+
+      if remote_ip.in?(['127.0.0.1', '::1', 'localhost'])
+        '8.8.8.8'
+      else
+        remote_ip
+      end
     end
   end
 end
