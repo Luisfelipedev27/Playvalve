@@ -10,7 +10,7 @@ RSpec.describe UserStatusCheckerService, type: :service do
     allow(Rails.cache.redis).to receive(:with).and_yield(redis_mock)
     allow(redis_mock).to receive(:sismember).and_return(true)
 
-    vpn_service_mock = double('VpnService', result: { proxy: false, vpn: false })
+    vpn_service_mock = double('VpnService', result: { proxy: false, vpn: false, tor: false, relay: false })
     allow(VpnApiClientService).to receive(:call).and_return(vpn_service_mock)
   end
 
@@ -62,7 +62,7 @@ RSpec.describe UserStatusCheckerService, type: :service do
       end
 
       it 'bans user with VPN detected' do
-        vpn_service_mock = double('VpnService', result: { proxy: false, vpn: true })
+        vpn_service_mock = double('VpnService', result: { proxy: false, vpn: true, tor: false, relay: false })
         allow(VpnApiClientService).to receive(:call).and_return(vpn_service_mock)
 
         service = described_class.call(user_params: valid_params, ip: ip, country: country)
@@ -72,7 +72,27 @@ RSpec.describe UserStatusCheckerService, type: :service do
       end
 
       it 'bans user with proxy detected' do
-        vpn_service_mock = double('VpnService', result: { proxy: true, vpn: false })
+        vpn_service_mock = double('VpnService', result: { proxy: true, vpn: false, tor: false, relay: false })
+        allow(VpnApiClientService).to receive(:call).and_return(vpn_service_mock)
+
+        service = described_class.call(user_params: valid_params, ip: ip, country: country)
+
+        expect(service).to be_success
+        expect(service.final_status_result).to eq('banned')
+      end
+
+      it 'bans user with tor detected' do
+        vpn_service_mock = double('VpnService', result: { proxy: false, vpn: false, tor: true, relay: false })
+        allow(VpnApiClientService).to receive(:call).and_return(vpn_service_mock)
+
+        service = described_class.call(user_params: valid_params, ip: ip, country: country)
+
+        expect(service).to be_success
+        expect(service.final_status_result).to eq('banned')
+      end
+
+      it 'bans user with relay detected' do
+        vpn_service_mock = double('VpnService', result: { proxy: false, vpn: false, tor: false, relay: true })
         allow(VpnApiClientService).to receive(:call).and_return(vpn_service_mock)
 
         service = described_class.call(user_params: valid_params, ip: ip, country: country)
