@@ -1,0 +1,170 @@
+{
+  "info": {
+    "name": "Playvalve RoR Test - User Check Status",
+    "description": "Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. User Allowed (not_banned)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "CF-IPCountry",
+            "value": "US"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"idfa\": \"8264148c-be95-4b2b-b260-6ee98dd53bf6\",\n  \"rooted_device\": false\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/v1/user/check_status",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "v1",
+            "user",
+            "check_status"
+          ]
+        }
+      }
+    },
+    {
+      "name": "2. Country Not Allowed (banned)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "CF-IPCountry",
+            "value": "CN"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"idfa\": \"1234567c-be95-4b2b-b260-6ee98dd53bf6\",\n  \"rooted_device\": false\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/v1/user/check_status",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "v1",
+            "user",
+            "check_status"
+          ]
+        }
+      }
+    },
+    {
+      "name": "3. Rooted Device (banned)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "CF-IPCountry",
+            "value": "US"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"idfa\": \"9876543c-be95-4b2b-b260-6ee98dd53bf6\",\n  \"rooted_device\": true\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/v1/user/check_status",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "v1",
+            "user",
+            "check_status"
+          ]
+        }
+      }
+    },
+    {
+      "name": "4. No Country Header (allowed)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"idfa\": \"abcdef12-be95-4b2b-b260-6ee98dd53bf6\",\n  \"rooted_device\": false\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/v1/user/check_status",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "v1",
+            "user",
+            "check_status"
+          ]
+        }
+      }
+    },
+    {
+      "name": "5. Brazil User (allowed)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "CF-IPCountry",
+            "value": "BR"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"idfa\": \"brasil12-be95-4b2b-b260-6ee98dd53bf6\",\n  \"rooted_device\": false\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/v1/user/check_status",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "v1",
+            "user",
+            "check_status"
+          ]
+        }
+      }
+    }
+  ]
+}
