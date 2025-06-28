@@ -53,6 +53,9 @@ group :development, :test do
 
   # https://github.com/bblimke/webmock
   gem "webmock"
+
+  # https://github.com/bkeepers/dotenv
+  gem "dotenv-rails"
 end
 
 group :development do
