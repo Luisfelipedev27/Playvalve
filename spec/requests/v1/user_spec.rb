@@ -8,7 +8,7 @@ RSpec.describe "V1::Users", type: :request do
     before do
       allow(Rails.cache.redis).to receive(:with).and_yield(redis_mock)
 
-      vpn_service_mock = double('VpnApiService', result: { proxy: false, vpn: false })
+      vpn_service_mock = double('VpnApiService', result: { proxy: false, vpn: false, tor: false, relay: false })
 
       allow(VpnApiClientService).to receive(:call).and_return(vpn_service_mock)
     end
