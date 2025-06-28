@@ -40,7 +40,9 @@ class UserStatusCheckerService < ApplicationService
 
   def fetch_vpn_data
     vpn_service = VpnApiClientService.call(ip: ip)
+
     self.vpn_data = vpn_service.result
+
     true
   end
 
@@ -65,7 +67,7 @@ class UserStatusCheckerService < ApplicationService
 
     return ban_user unless country_whitelisted?
     return ban_user if rooted_device == true
-    return ban_user if vpn_data[:vpn] || vpn_data[:proxy]
+    return ban_user if vpn_data[:vpn] || vpn_data[:proxy] || vpn_data[:tor] || vpn_data[:relay]
 
     allow_user
   end
@@ -98,7 +100,7 @@ class UserStatusCheckerService < ApplicationService
       rooted_device: rooted_device || false,
       country: country,
       proxy: vpn_data[:proxy] || false,
-      vpn: vpn_data[:vpn] || false
+      vpn: vpn_data[:vpn] || vpn_data[:tor] || vpn_data[:relay] || false
     }
 
     logger_service = IntegrityLoggerService.call(log_data: log_data)
